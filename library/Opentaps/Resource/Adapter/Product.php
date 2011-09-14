@@ -34,7 +34,7 @@ class Opentaps_Resource_Adapter_Product extends Opentaps_Resource_Adapter_Abstra
 		
         // JSON returns an array of product objects,
         // so we reassign those to be directly accessible via products property
-        $responseObj->response->products = $responseObj->response->products->product;
+        $responseObj->response->products = $responseObj->response->data->product;
 
         return $responseObj->response;
 //		var_dump($this->client->getLastRequest());
