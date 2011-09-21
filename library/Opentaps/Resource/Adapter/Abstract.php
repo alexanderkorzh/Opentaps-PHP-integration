@@ -72,24 +72,34 @@ abstract class Opentaps_Resource_Adapter_Abstract {
     	}
     }
 
-    protected function request($request) {
+    protected function request($request, $resource = null) {
         try {
-            $result = $this->client->request($request);
+            $response = $this->client->request($request);
 //			var_dump($result);
 //			var_dump($this->client->getResourcePath(), $result->getBody());
-            $responseObj = Zend_Json::decode($result->getBody(), Zend_Json::TYPE_OBJECT);
+            $r = Zend_Json::decode($response->getBody(), Zend_Json::TYPE_OBJECT);
 //			var_dump($responseObj, $responseObj->response);
         } catch (Exception $e) {
 //			var_dump("Error", $e->getMessage());
             throw new Opentaps_Resource_Exception($e->getMessage());
         }
 
-        if ($responseObj->response->status == "error") {
+        if ($r->response->status == "error") {
 //			var_dump("Throw exception"); return false;
-            throw new Opentaps_Resource_Exception($responseObj->response->message);
+            throw new Opentaps_Resource_Exception($r->response->message);
         }
 
-        return $responseObj;
+        $r->response->dataset = array();
+
+        if (!empty($resource)) {
+
+            if (isset($r->response->data) && isset($r->response->data->$resource) && is_array($r->response->data->$resource)) {
+                $r->response->dataset = $r->response->data->$resource;
+                unset($r->response->data);
+            }
+        }
+
+        return $r;
     }
     
 }

@@ -6,43 +6,68 @@ require_once 'Opentaps/Resource/Exception.php';
 
 class Opentaps_Resource_Adapter_Catalog extends Opentaps_Resource_Adapter_Abstract {
 
-	const TYPE   		  = 'CATALOG';
-	const PATH			  = "/stores";
-	
+    /**
+     * Resource path relative to the web service
+     */
+	const RESOURCE_PATH_STORES = '/stores';
+	const RESOURCE_PATH_CATEGORIES = '/stores/%s/catalogs/%s/categories';
 
+
+    /**
+     * Construct the adaptor
+     */
     function __construct() {
-        $this->path = self::PATH;
+//        $this->path = self::RESOURCE_PATH;
     }
     
+    /**
+     * Retrieves all Stores available
+     *
+     * @return object
+    */
     function getStores() {
-        $responseObj = $this->request('GET');
+        /** @var stdClass $r->response */
 
-        // JSON returns an array of objects,
-        // so we reassign those to be directly accessible via products property
-        if (isset($responseObj->response->stores)) {
-            $responseObj->response->stores = $responseObj->response->data->store;
-        } else {
-            $responseObj->response->stores = array();
-        }
+        $this->setResourcePath(self::RESOURCE_PATH_STORES);
+        $r = $this->request('GET', 'store');
 
-        return $responseObj->response;
-//		var_dump($this->client->getLastRequest());
+        return $r->response;
     }
 
-    function getCategories() {
-        $this->setResourcePath(self::PATH . "/10000/catalogs/SpsCatalog/categories");
-        $responseObj = $this->request('GET');
+    /**
+     * Retrieves Catalogs for a given Store
+     *
+     * @param string $storeId Store ID, mandatory
+     * @param date $since Last Updated Date, optional, if not supplied returns all Catalogs
+     * @return object
+    */
+    function getCatalogs($storeId = '', $since = null) {
+        // TODO implement the functionality
+    }
 
-        // JSON returns an array of objects,
-        // so we reassign those to be directly accessible via products property
-        if (isset($responseObj->response->data)) {
-            $responseObj->response->categories = $responseObj->response->data->category;
-        } else {
-            $responseObj->response->categories = array();
+    /**
+     * Retrieves Categories for a given Catalog
+     *
+     * @param string $storeId Store ID, mandatory
+     * @param string $catalogId Catalog ID, mandatory
+     * @param date $since Last Updated Date, optional, if not supplied returns all Categories in Catalog
+     * @return object
+    */
+    function getCategories($storeId = '', $catalogId = '', $since = null) {
+        /** @var stdClass $r->response */
+
+        if (empty($storeId)) {
+            throw new Opentaps_Resource_Exception('A valid Store ID has to be supplied.');
         }
 
-        return $responseObj->response;
-//		var_dump($this->client->getLastRequest());
+        if (empty($catalogId)) {
+            throw new Opentaps_Resource_Exception('A valid Catalog ID has to be supplied.');
+        }
+
+        $this->setResourcePath(sprintf(self::RESOURCE_PATH_CATEGORIES, $storeId, $catalogId));
+        $r = $this->request('GET', 'category');
+
+        return $r->response;
     }
 
 }
