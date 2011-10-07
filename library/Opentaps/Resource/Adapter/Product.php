@@ -34,6 +34,15 @@ class Opentaps_Resource_Adapter_Product extends Opentaps_Resource_Adapter_Abstra
         $this->setResourcePath(sprintf(self::RESOURCE_PATH_PRODUCTS, $storeId, $catalogId));
         $r = $this->request('GET', 'product');
 
+        // TODO remove, temporary solution for prices, has to be implemented in OT
+        for ($i = 0; $i < count($r->response->dataset); $i++) {
+            $r->response->dataset[0]->prices = array(
+                'listPrice' => rand(1, 1000),
+                'basePrice' => rand(1, 1000),
+                'defaultPrice' => rand(1, 1000),
+            );
+        }
+
         return $r->response;
     }
 
