@@ -57,11 +57,13 @@ class Opentaps_Resource_Adapter_Product extends Opentaps_Resource_Adapter_Abstra
 
 /*
 Phones and Terminals:       1   SPS-PNT-#####
+Iridium
+Inmarsat
 Emergency Equipment:        2   SPS-EE-#####
 Voice and Data Services:    3   SPS-SVC-#####
 Accessories                 4
 Antennas:                   5   SPS-ANT-#####
-Cables and Adapters:        6   SPS-CAN-#####
+Cables and Adapters:        6   SPS-CNA-#####
 Cases and Holsters:         7   SPS-CSE-#####
 Chargers and Batteries:     8   SPS-CNB-#####
 Docking Stations:           9   SPS-DOC-#####
@@ -77,7 +79,7 @@ Various:                    14  SPS-VAR-#####
                 'SPS-EE'  => 2,
                 'SPS-SVC' => 3,
                 'SPS-ANT' => 5,
-                'SPS-CAN' => 6,
+                'SPS-CNA' => 6,
                 'SPS-CSE' => 7,
                 'SPS-CNB' => 8,
                 'SPS-DOC' => 9,
